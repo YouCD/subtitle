@@ -3,7 +3,7 @@
 
 # 安装
 ```shell
-go get github.com/YouCD/subtitle
+go install github.com/YouCD/subtitle@latest
 
 ```
 
