@@ -34,5 +34,5 @@ build-all:
 	make build-linux
 	make build-darwin
 	make build-win
-	upx $(BINARY_DIR)/*
+	./upx $(BINARY_DIR)/*
 	cd bin&&tar zcf ${BINARY_NAME}.tgz ${BINARY_NAME}
