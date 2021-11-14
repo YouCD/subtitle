@@ -1,12 +1,19 @@
 # `subtitle`
 `subtitle`是用于获取字幕的工具目前支持射手，迅雷两个平台获取字幕
 
+[![Build Status](https://app.travis-ci.com/YouCD/subtitle.svg?branch=main)](https://app.travis-ci.com/YouCD/subtitle)
 # 安装
+* 自行编译
+```shell
+git clone install github.com/YouCD/subtitle
+cd subtitle
+make build&&sudo mv bin/subtitle/subtitle /usr/local/bin
+```
+* 快速安装
 ```shell
 go install github.com/YouCD/subtitle@latest
 
 ```
-
 # 食用方法
 `subtitle`默认从射手网往下载字幕
 
