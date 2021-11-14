@@ -2,14 +2,14 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/YouCD/subtitle/pkg/common"
+	"github.com/YouCD/subtitle/pkg/shooter"
+	"github.com/YouCD/subtitle/pkg/xunlei"
 	"github.com/spf13/cobra"
 	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
-	"subtitle/pkg/common"
-	"subtitle/pkg/shooter"
-	"subtitle/pkg/xunlei"
 )
 
 var (

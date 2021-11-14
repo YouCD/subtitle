@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
+	"github.com/YouCD/subtitle/pkg/common"
 	"github.com/gookit/color"
 	"github.com/pkg/errors"
 	"io/ioutil"
@@ -13,7 +14,6 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-	"subtitle/pkg/common"
 )
 
 type File struct {

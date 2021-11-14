@@ -1,10 +1,10 @@
 package xunlei
 
 import (
-	"subtitle/pkg/common"
 	"crypto/sha1"
 	"encoding/json"
 	"fmt"
+	"github.com/YouCD/subtitle/pkg/common"
 	"github.com/gookit/color"
 	"github.com/pkg/errors"
 	"io/ioutil"
@@ -25,9 +25,11 @@ type XunleiSub struct {
 	Svote    int    `json:"svote"`
 	Roffset  int    `json:"roffset"`
 }
+
 var (
-	NotFoundErr=errors.New("NotFound")
+	NotFoundErr = errors.New("NotFound")
 )
+
 type XunleiSublist struct {
 	Sublist []XunleiSub `json:"sublist"`
 }
@@ -69,7 +71,7 @@ func (m *Xunlei) GetSubtitleInfo(path string) (SubtitleInfoList []common.Subtitl
 	if err != nil {
 		return nil, errors.WithMessage(err, "Unmarshal subList ")
 	}
-	if len(xunleiSublist.Sublist)==1&&xunleiSublist.Sublist[0].Sname==""{
+	if len(xunleiSublist.Sublist) == 1 && xunleiSublist.Sublist[0].Sname == "" {
 		red := color.FgRed.Render
 		fmt.Printf("Not found subtitle for video file %s may be incomplete.\n", red(fileName))
 		return nil, NotFoundErr

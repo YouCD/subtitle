@@ -1,4 +1,4 @@
-module subtitle
+module github.com/YouCD/subtitle
 
 go 1.17
 
