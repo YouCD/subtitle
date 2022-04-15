@@ -2,6 +2,7 @@ package shooter
 
 import (
 	"crypto/md5"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"github.com/YouCD/subtitle/pkg/common"
@@ -55,7 +56,12 @@ func (m *Shooter) GetSubtitleInfo(path string) (SubtitleInfoList []common.Subtit
 	if err != nil {
 		return nil, errors.WithMessage(err, "http.NewRequest")
 	}
-	httpClient := &http.Client{}
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	httpClient := &http.Client{
+		Transport: tr,
+	}
 	resp, err := httpClient.Do(req)
 
 	if err != nil {
