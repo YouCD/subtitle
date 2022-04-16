@@ -1,6 +1,7 @@
 package common
 
 import (
+	"crypto/tls"
 	"fmt"
 	"github.com/gookit/color"
 	"github.com/pkg/errors"
@@ -51,7 +52,13 @@ func FileNameSuffix(filename string) string {
 }
 
 func DownLoadFile(info SubtitleInfo) error {
-	resp, err := http.Get(info.Url)
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	httpClient := &http.Client{
+		Transport: tr,
+	}
+	resp, err := httpClient.Get(info.Url)
 	if err != nil {
 		return err
 	}
