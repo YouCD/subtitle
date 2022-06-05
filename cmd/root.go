@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/YouCD/subtitle/pkg/common"
+	"github.com/YouCD/subtitle/pkg/opensubtitles"
 	"github.com/YouCD/subtitle/pkg/shooter"
 	"github.com/YouCD/subtitle/pkg/xunlei"
 	"github.com/spf13/cobra"
@@ -10,6 +11,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 var (
@@ -17,8 +19,9 @@ var (
 	VideoFile string
 	VideoDir  string
 	Source    string
-	x         = xunlei.GetXunlei()
-	s         = shooter.GetShooter()
+	x         = xunlei.NewXunlei()
+	s         = shooter.NewShooter()
+	osb       = opensubtitles.NewOpenSubtitles()
 )
 
 func init() {
@@ -32,20 +35,30 @@ func init() {
 var rootCmd = &cobra.Command{
 	Use:   Name,
 	Short: fmt.Sprintf("%s 是用于获取字幕的工具", Name),
-	Example: `	subtitle -f SomeVideo.mkv
-	subtitle -d SomeVideDir
-	subtitle --source xunlei -d SomeVideDir
-    subtitle `,
+	Example: `    指定电影文件下载
+        subtitle -f SomeVideo.mkv
+    指定电影文件夹
+        subtitle -d SomeVideDir
+    指定源 支持 Shooter Xunlei  OpenSubtitles(可简写为:osb)   默认为射手网 Shooter
+        subtitle --source xunlei -d SomeVideDir
+        subtitle --source  osb   -d SomeVideDir`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if Source != "shooter" && Source != "xunlei" {
-			fmt.Println("not support the source.")
+		if strings.ToLower(Source) != "shooter" && strings.ToLower(Source) != "xunlei" && strings.ToLower(Source) != "opensubtitles" && strings.ToLower(Source) != "osb" {
+			fmt.Println("not support the source.only support shooter、xunlei、opensubtitles")
+			os.Exit(1)
+		}
+		// 都不指定
+		if VideoDir == "" && VideoFile == "" {
+			cmd.Help()
 			return
 		}
-		if Source == "shooter" {
+		switch {
+		case strings.ToLower(Source) == "shooter":
 			doExec(s)
-		}
-		if Source == "xunlei" {
+		case strings.ToLower(Source) == "xunlei":
 			doExec(x)
+		case strings.ToLower(Source) == "osb" || strings.ToLower(Source) == "opensubtitles":
+			doExec(osb)
 		}
 
 	},
@@ -79,7 +92,7 @@ func execDir(subtitle common.Subtitle, path string) {
 		list, err := subtitle.GetSubtitleInfo(filepath.Join(tempPath, f))
 		if err != nil {
 			switch {
-			case err == shooter.InvalidCharacter:
+			case err == common.InvalidCharacter:
 				continue
 			case err == xunlei.NotFoundErr:
 				continue
@@ -102,7 +115,7 @@ func execFile(subtitle common.Subtitle, filePath string) {
 	list, err := subtitle.GetSubtitleInfo(filePath)
 	if err != nil {
 		switch {
-		case err == shooter.InvalidCharacter:
+		case err == common.InvalidCharacter:
 			return
 		case err == xunlei.NotFoundErr:
 			return
@@ -124,17 +137,12 @@ func execFile(subtitle common.Subtitle, filePath string) {
 
 func doExec(subtitle common.Subtitle) {
 	// 指定单个文件
-	if VideoDir == "" && VideoFile != "" {
+	if VideoFile != "" {
 		execFile(subtitle, VideoFile)
 		return
 	}
-	// 没有指定video目录时候
-	if VideoDir == "" && VideoFile == "" {
-		execDir(subtitle, "")
-		return
-	}
 	// 指定文件夹
-	if VideoDir != "" && VideoFile == "" {
+	if VideoDir != "" {
 		if !common.IsDir(VideoDir) {
 			fmt.Printf("%s is  dir.\n", VideoDir)
 			return

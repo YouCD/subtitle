@@ -28,19 +28,15 @@ type ShooterSub struct {
 	Files []File `json:"Files"`
 }
 
-var (
-	InvalidCharacter = errors.New("invalid character 'ÿ' looking for beginning of value")
-)
-
 type Shooter struct {
 	API string
 }
 
-func GetShooter() *Shooter {
+func NewShooter() *Shooter {
 	return &Shooter{API: "https://www.shooter.cn/api/subapi.php?"}
 }
 
-func (m *Shooter) GetSubtitleInfo(path string) (SubtitleInfoList []common.SubtitleInfo, err error) {
+func (m *Shooter) GetSubtitleInfo(path string) (SubtitleInfoList []*common.SubtitleInfo, err error) {
 
 	hash, err := m.CalculateHash(path)
 	if err != nil {
@@ -80,7 +76,7 @@ func (m *Shooter) GetSubtitleInfo(path string) (SubtitleInfoList []common.Subtit
 	if err != nil {
 		red := color.FgRed.Render
 		fmt.Printf("Not found subtitle for video file %s may be incomplete.\n", red(file))
-		return nil, InvalidCharacter
+		return nil, common.InvalidCharacter
 	}
 	for index, v := range shooterSubList {
 		for _, f := range v.Files {
@@ -92,19 +88,19 @@ func (m *Shooter) GetSubtitleInfo(path string) (SubtitleInfoList []common.Subtit
 			if index < 10 {
 				if index == 0 {
 					item.SubtitleName = SubtitlePath + "." + f.Ext
-					SubtitleInfoList = append(SubtitleInfoList, item)
+					SubtitleInfoList = append(SubtitleInfoList, &item)
 					continue
 				}
 				item.SubtitleName = SubtitlePath + ".0" + strconv.Itoa(index) + "." + f.Ext
 			}
-			SubtitleInfoList = append(SubtitleInfoList, item)
+			SubtitleInfoList = append(SubtitleInfoList, &item)
 		}
 	}
 
 	return
 }
 
-func (m *Shooter) DownloadSubtitle(info common.SubtitleInfo) error {
+func (m *Shooter) DownloadSubtitle(info *common.SubtitleInfo) error {
 	return common.DownLoadFile(info)
 }
 

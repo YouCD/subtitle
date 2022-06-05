@@ -51,7 +51,7 @@ func FileNameSuffix(filename string) string {
 	return fileSuffix
 }
 
-func DownLoadFile(info SubtitleInfo) error {
+func DownLoadFile(info *SubtitleInfo) error {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
@@ -89,7 +89,7 @@ func IsVideo(filename string) bool {
 	if err != nil {
 		return false
 	}
-	if strings.Contains(contentType,"video")   {
+	if strings.Contains(contentType, "video") {
 		return true
 	}
 	return false
@@ -110,7 +110,7 @@ func GetFileContentType(out *os.File) (string, error) {
 	return contentType, nil
 }
 
-func GetVideoList(files []fs.FileInfo,path string) (fileList []string) {
+func GetVideoList(files []fs.FileInfo, path string) (fileList []string) {
 	for _, f1 := range files {
 		if f1.IsDir() {
 			continue
@@ -133,7 +133,6 @@ func GetVideoList(files []fs.FileInfo,path string) (fileList []string) {
 		}
 		fileList = append(fileList, f1.Name())
 	}
-
 
 	return
 }

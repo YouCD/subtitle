@@ -43,10 +43,13 @@ Usage:
   subtitle [command]
 
 Examples:
-	subtitle -f SomeVideo.mkv
-	subtitle -d SomeVideDir
-	subtitle --source xunlei -d SomeVideDir
-    subtitle 
+    指定电影文件下载
+        subtitle -f SomeVideo.mkv
+    指定电影文件夹
+        subtitle -d SomeVideDir
+    指定源 支持 Shooter Xunlei  OpenSubtitles(可简写为:osb)   默认为射手网 Shooter
+        subtitle --source xunlei -d SomeVideDir
+        subtitle --source  osb   -d SomeVideDir
 
 Available Commands:
   completion  generate the autocompletion script for the specified shell

@@ -37,10 +37,10 @@ type Xunlei struct {
 	API string
 }
 
-func GetXunlei() *Xunlei {
+func NewXunlei() *Xunlei {
 	return &Xunlei{API: "http://sub.xmp.sandai.net:8000/subxl/%s.json"}
 }
-func (m *Xunlei) GetSubtitleInfo(path string) (SubtitleInfoList []common.SubtitleInfo, err error) {
+func (m *Xunlei) GetSubtitleInfo(path string) (SubtitleInfoList []*common.SubtitleInfo, err error) {
 
 	cid, err := m.CalculateHash(path)
 	if err != nil {
@@ -89,21 +89,21 @@ func (m *Xunlei) GetSubtitleInfo(path string) (SubtitleInfoList []common.Subtitl
 			if strings.Contains(v.Language, "简体&英语") || strings.Contains(v.Language, "简体") || strings.Contains(v.Language, "未知语言") || strings.Contains(v.Language, "英语") {
 				if index == 0 {
 					item.SubtitleName = SubtitlePath + "." + v.Language + suffix
-					SubtitleInfoList = append(SubtitleInfoList, item)
+					SubtitleInfoList = append(SubtitleInfoList, &item)
 					continue
 				}
 				item.SubtitleName = SubtitlePath + ".0" + strconv.Itoa(index) + "." + v.Language + suffix
-				SubtitleInfoList = append(SubtitleInfoList, item)
+				SubtitleInfoList = append(SubtitleInfoList, &item)
 				continue
 			}
 			item.SubtitleName = SubtitlePath + ".0" + strconv.Itoa(index) + "." + v.Language + suffix
-			SubtitleInfoList = append(SubtitleInfoList, item)
+			SubtitleInfoList = append(SubtitleInfoList, &item)
 		}
 	}
 	return
 }
 
-func (m *Xunlei) DownloadSubtitle(info common.SubtitleInfo) error {
+func (m *Xunlei) DownloadSubtitle(info *common.SubtitleInfo) error {
 	return common.DownLoadFile(info)
 }
 
